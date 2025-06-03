@@ -1,0 +1,54 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Diabetes Tipo 2</title>
+</head>
+<body>
+    <h1>Predicción de Diabetes Tipo 2</h1>
+    <form action="/predecir" method="POST">
+        <label for="sexo">Sexo (0 = Masculino, 1 = Femenino):</label><br>
+        <input type="number" id="sexo" name="sexo" min="0" max="1" required><br><br>
+
+        <label for="edad">Edad:</label><br>
+        <input type="number" id="edad" name="edad" required><br><br>
+
+        <label for="imc">IMC:</label><br>
+        <input type="number" step="0.1" id="imc" name="imc" required><br><br>
+
+        <label for="neutrofilos">Neutrófilos:</label><br>
+        <input type="number" step="0.1" id="neutrofilos" name="neutrofilos" required><br><br>
+
+        <label for="hemoglobina">Hemoglobina:</label><br>
+        <input type="number" step="0.1" id="hemoglobina" name="hemoglobina" required><br><br>
+
+        <label for="eritrocitos">Eritrocitos:</label><br>
+        <input type="number" step="0.1" id="eritrocitos" name="eritrocitos" required><br><br>
+
+        <label for="hematocrito">Hematocrito:</label><br>
+        <input type="number" step="0.1" id="hematocrito" name="hematocrito" required><br><br>
+
+        <label for="mch">MCH:</label><br>
+        <input type="number" step="0.1" id="mch" name="mch" required><br><br>
+
+        <label for="mcv">MCV:</label><br>
+        <input type="number" step="0.1" id="mcv" name="mcv" required><br><br>
+
+        <label for="eosinofilos">Eosinófilos:</label><br>
+        <input type="number" step="0.1" id="eosinofilos" name="eosinofilos" required><br><br>
+
+        <label for="rdw_cv">RDW-CV:</label><br>
+        <input type="number" step="0.1" id="rdw_cv" name="rdw_cv" required><br><br>
+
+        <label for="linfocitos">Linfocitos:</label><br>
+        <input type="number" step="0.1" id="linfocitos" name="linfocitos" required><br><br>
+
+        <label for="monocitos">Monocitos:</label><br>
+        <input type="number" step="0.1" id="monocitos" name="monocitos" required><br><br>
+
+        <input type="submit" value="Predecir">
+    </form>
+</body>
+</html>
