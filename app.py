@@ -23,7 +23,8 @@ class ANFIS(nn.Module):
 
 # Cargar el modelo ANFIS y el scaler
 torch.serialization.add_safe_globals([ANFIS])
-model = torch.load("anfis_modelo_27.pth", weights_only=False)
+# model = torch.load("anfis_modelo_27.pth", weights_only=False)
+model = torch.load("anfis_modelo_27.pth", map_location=torch.device('cpu'))
 model.eval()
 scaler = joblib.load("scaler27.pkl")
 
