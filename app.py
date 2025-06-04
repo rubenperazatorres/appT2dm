@@ -2,14 +2,9 @@ import json
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from flask import Flask, request, jsonify
+import torch
 
 app = Flask(__name__)
-
-# Cargar modelo y scaler
-# model = torch.load("anfis_modelo_27.pth", map_location=torch.device('cpu'))
-# model.eval()
-# scaler = joblib.load("scaler27_render.pkl")
-
 
 # Función para cargar el scaler desde JSON
 def load_scaler(json_path):
@@ -22,21 +17,30 @@ def load_scaler(json_path):
     scaler.n_features_in_ = params["n_features_in_"]
     return scaler
 
-# Carga el scaler al iniciar la app
+# Carga el scaler y modelo al iniciar la app
 scaler = load_scaler("scaler_params.json")
+model = torch.load("anfis_modelo_27.pth", map_location=torch.device('cpu'))
+model.eval()
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/predecir', methods=['POST'])
-def predecir():
+@app.route("/predict", methods=["POST"])
+def predict():
+    data = request.json
+    if "features" not in data:
+        return jsonify({"error": "No features provided"}), 400
     
-    data = request.json  # Suponemos que recibes un JSON con datos en lista
-    # Ejemplo: data = {"features": [val1, val2, val3, ...]}
-    features = np.array(data["features"]).reshape(1, -1)    
+    features = np.array(data["features"]).reshape(1, -1)
+    try:
+        features_scaled = scaler.transform(features)
+    except Exception as e:
+        return jsonify({"error": f"Error in scaling features: {str(e)}"}), 400
     
-    return jsonify({"scaled_features": features_scaled.tolist()})
+    input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
+    
+    with torch.no_grad():
+        output = model(input_tensor)
+    
+    prediction = output.numpy().tolist()
+    return jsonify({"prediction": prediction})
 
-if __name__ == '__main__':
-     app.run(host="0.0.0.0", port=8000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000)
