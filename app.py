@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Cargar modelo y scaler
 model = torch.load("anfis_modelo_27.pth", map_location=torch.device('cpu'))
 model.eval()
-scaler = joblib.load("scaler27.pkl")
+scaler = joblib.load("scaler27_render.pkl")
 
 @app.route('/')
 def index():
