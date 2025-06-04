@@ -1,18 +1,18 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import torch
 import joblib
 import numpy as np
 
 app = Flask(__name__)
 
-# Cargar el modelo y el scaler
-model = torch.load('model/modelo_entrenado.pth', map_location=torch.device('cpu'))
+# Cargar modelo y scaler
+model = torch.load('anfis_modelo_27.pth', map_location=torch.device('cpu'))
 model.eval()
-scaler = joblib.load('model/scaler.pkl')
+scaler = joblib.load('scaler27.pkl')
 
 @app.route('/')
 def index():
-    return 'App T2DM funcionando'
+    return render_template('index.html')  # Usa tus plantillas
 
 @app.route('/predict', methods=['POST'])
 def predict():
