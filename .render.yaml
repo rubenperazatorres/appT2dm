@@ -1,6 +1,10 @@
 services:
   - type: web
     name: appT2dm
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    runtime: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python app.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.11
+
