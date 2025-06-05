@@ -33,8 +33,8 @@ model.eval()
 #    return "✅ API de Predicción de Diabetes tipo 2 (ANFIS) en funcionamiento."
 
 # Ruta para servir la página index.html
-@app.route("/", methods=["GET"])
-def home():
+@app.route("/")
+def index():
     return render_template("index.html")
 
 
