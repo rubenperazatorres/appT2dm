@@ -1,219 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción de DM2</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: auto;
-        }
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-        }
-        h1 {
-            font-size: 22px;
-            color: #333;
-        }
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-        label {
-            font-weight: bold;
-            text-align: left;
-            display: block;
-        }
-        input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        .full-width {
-            grid-column: span 2;
-        }
-        input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-top: 15px;
-            background: #28a745;
-            border: none;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        input[type="submit"]:hover {
-            background: #218838;
-        }
-        /* Barra de riesgo */
-        .risk-bar-container {
-            margin-top: 20px;
-            text-align: left;
-        }
-        .risk-bar {
-            height: 20px;
-            background: linear-gradient(to right, green 0%, yellow 25%, orange 50%, red 75%, darkred 100%);
-            border-radius: 5px;
-            position: relative;
-        }
-        .risk-indicator {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 5px;
-            background: black;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Predicción con ANFIS</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Detection of Type 2 Diabetes Mellitus using an<br>Adaptive Neuro-Fuzzy Inference System (ANFIS)<br></h1>
-            <label><center></center></label>
-        <form action="/predecir" method="POST">
-            <div class="form-grid">
-                <div class="full-width">
-                    <label for="sexo">Sexo (0 = Masculino, 1 = Femenino):</label>
-                    <input type="number" id="sexo" name="sexo" min="0" max="1" required>
-                </div>
+  <h1>Predicción de Riesgo de Diabetes</h1>
+  <form id="formulario">
+    <label for="sexo">Sexo (0=Hombre, 1=Mujer):</label>
+    <input type="number" id="sexo" step="1" required><br>
 
-                <div>
-                    <label for="edad">Edad (18-99):</label>
-                    <input type="number" id="edad" name="edad" min="18" max="99" required>
-                </div>
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" required><br>
 
-                <div>
-                    <label for="imc">IMC (15.0-39.9):</label>
-                    <input type="number" step="0.1" id="imc" name="imc" min="15.0" max="39.9" required>
-                </div>
+    <label for="imc">IMC:</label>
+    <input type="number" id="imc" step="0.01" required><br>
 
-                <div>
-                    <label for="neutrofilos">Neutrófilos (1.5-7.5):</label>
-                    <input type="number" step="0.1" id="neutrofilos" name="neutrofilos" min="1.5" max="7.5" required>
-                </div>
+    <label for="hemoglobina">Hemoglobina:</label>
+    <input type="number" id="hemoglobina" step="0.1" required><br>
 
-                <div>
-                    <label for="hemoglobina">Hemoglobina (11.0-18.0):</label>
-                    <input type="number" step="0.1" id="hemoglobina" name="hemoglobina" min="11.0" max="18.0" required>
-                </div>
+    <label for="neutrofilos">Neutrófilos:</label>
+    <input type="number" id="neutrofilos" step="0.1" required><br>
 
-                <div>
-                    <label for="eritrocitos">Eritrocitos (3.8-6.0):</label>
-                    <input type="number" step="0.1" id="eritrocitos" name="eritrocitos" min="3.8" max="6.0" required>
-                </div>
+    <label for="eritrocitos">Eritrocitos:</label>
+    <input type="number" id="eritrocitos" step="0.1" required><br>
 
-                <div>
-                    <label for="hematocrito">Hematocrito (35.0-54.0):</label>
-                    <input type="number" step="0.1" id="hematocrito" name="hematocrito" min="35.0" max="54.0" required>
-                </div>
+    <label for="hematocrito">Hematocrito:</label>
+    <input type="number" id="hematocrito" step="0.1" required><br>
 
-                <div>
-                    <label for="mch">MCH (25.0-34.0):</label>
-                    <input type="number" step="0.1" id="mch" name="mch" min="25.0" max="34.0" required>
-                </div>
+    <label for="mch">MCH:</label>
+    <input type="number" id="mch" step="0.1" required><br>
 
-                <div>
-                    <label for="mcv">MCV (75-100):</label>
-                    <input type="number" step="0.1" id="mcv" name="mcv" min="75" max="100" required>
-                </div>
+    <label for="mcv">MCV:</label>
+    <input type="number" id="mcv" step="0.1" required><br>
 
-                <div>
-                    <label for="eosinofilos">Eosinófilos (0.0-7.0):</label>
-                    <input type="number" step="0.1" id="eosinofilos" name="eosinofilos" min="0.0" max="7.0" required>
-                </div>
+    <label for="eosinofilos">Eosinófilos:</label>
+    <input type="number" id="eosinofilos" step="0.1" required><br>
 
-                <div>
-                    <label for="rdw_cv">RDW-CV (11.0-16.0):</label>
-                    <input type="number" step="0.1" id="rdw_cv" name="rdw_cv" min="11.0" max="16.0" required>
-                </div>
+    <label for="rdw">RDW-CV:</label>
+    <input type="number" id="rdw" step="0.1" required><br>
 
-                <div>
-                    <label for="linfocitos">Linfocitos (15.0-50.0):</label>
-                    <input type="number" step="0.1" id="linfocitos" name="linfocitos" min="15.0" max="50.0" required>
-                </div>
+    <label for="linfocitos">Linfocitos:</label>
+    <input type="number" id="linfocitos" step="0.1" required><br>
 
-                <div>
-                    <label for="monocitos">Monocitos (2.0-12.0):</label>
-                    <input type="number" step="0.1" id="monocitos" name="monocitos" min="2.0" max="12.0" required>
-                </div>
-            </div>
-            <input type="submit" onclick="rellenarDatosAleatorios()" value="Rellenar Datos Aleatorios y Predecir Riesgo">  
-            <input type="submit" value="Predecir">
-        </form>
+    <label for="monocitos">Monocitos:</label>
+    <input type="number" id="monocitos" step="0.1" required><br><br>
 
-        <!-- Barra de riesgo -->
-        <div class="risk-bar-container">
-            <p>Riesgo de Diabetes:</p>
-            <div class="risk-bar">
-                <div id="risk-indicator" class="risk-indicator" style="left: 0%;"></div>
-            </div>
-            <p id="risk-value">0%</p>
-        </div>
-    </div>
+    <button type="submit">Predecir</button>
+  </form>
 
-    <script>
-        document.querySelector("form").addEventListener("submit", function(event) {
-            event.preventDefault(); // Evitar que el formulario recargue la página
-    
-            let formData = new FormData(this);
-    
-            fetch("/predecir", {
-                method: "POST",
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.probabilidad !== undefined) {
-                    actualizarBarra(data.probabilidad);
-                } else {
-                    alert("Error en la predicción.");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        });
-    
-        function actualizarBarra(probabilidad) {
-            let indicador = document.getElementById("risk-indicator");
-            let valorTexto = document.getElementById("risk-value");
-    
-            let posicion = Math.min(Math.max(probabilidad, 0), 100);
-            indicador.style.left = posicion + "%"; 
-            valorTexto.innerText = `Riesgo: ${probabilidad.toFixed(2)}%`;
-        }
+  <h2 id="resultado"></h2>
 
-        function rellenarDatosAleatorios() {
-            document.getElementById("sexo").value = Math.random() < 0.5 ? 0 : 1; // 0 o 1
-            document.getElementById("edad").value = Math.floor(Math.random() * (99 - 18 + 1)) + 18; // 18 a 99
-            document.getElementById("imc").value = (Math.random() * (39.9 - 15.0) + 15.0).toFixed(1); // 15.0 a 39.9
-            document.getElementById("neutrofilos").value = (Math.random() * (7.5 - 1.5) + 1.5).toFixed(1); // 1.5 a 7.5
-            document.getElementById("hemoglobina").value = (Math.random() * (18.0 - 11.0) + 11.0).toFixed(1); // 11.0 a 18.0
-            document.getElementById("eritrocitos").value = (Math.random() * (6.0 - 3.8) + 3.8).toFixed(1); // 3.8 a 6.0
-            document.getElementById("hematocrito").value = (Math.random() * (54.0 - 35.0) + 35.0).toFixed(1); // 35.0 a 54.0
-            document.getElementById("mch").value = (Math.random() * (34.0 - 25.0) + 25.0).toFixed(1); // 25.0 a 34.0
-            document.getElementById("mcv").value = (Math.random() * (100.0 - 75.0) + 75.0).toFixed(1); // 75.0 a 100.0
-            document.getElementById("eosinofilos").value = (Math.random() * (7.0 - 0.0) + 0.0).toFixed(1); // 0.0 a 7.0
-            document.getElementById("rdw_cv").value = (Math.random() * (16.0 - 11.0) + 11.0).toFixed(1); // 11.0 a 16.0
-            document.getElementById("linfocitos").value = (Math.random() * (50.0 - 15.0) + 15.0).toFixed(1); // 15.0 a 50.0
-            document.getElementById("monocitos").value = (Math.random() * (12.0 - 2.0) + 2.0).toFixed(1); // 2.0 a 12.0
-        }
+  <script>
+    document.getElementById("formulario").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-    </script>
+      const datos = [
+        Number(document.getElementById("sexo").value),
+        Number(document.getElementById("edad").value),
+        Number(document.getElementById("imc").value),
+        Number(document.getElementById("neutrofilos").value),
+        Number(document.getElementById("hemoglobina").value),
+        Number(document.getElementById("eritrocitos").value),
+        Number(document.getElementById("hematocrito").value),
+        Number(document.getElementById("mch").value),
+        Number(document.getElementById("mcv").value),
+        Number(document.getElementById("eosinofilos").value),
+        Number(document.getElementById("rdw").value),
+        Number(document.getElementById("linfocitos").value),
+        Number(document.getElementById("monocitos").value)
+      ];
+
+      fetch("/predecir", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ features: datos })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error("Error en la predicción");
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById("resultado").textContent =
+          "Predicción: " + JSON.stringify(data.prediction);
+      })
+      .catch(error => {
+        document.getElementById("resultado").textContent = "Error: " + error.message;
+      });
+    });
+  </script>
 </body>
 </html>
