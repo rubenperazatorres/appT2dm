@@ -13,4 +13,5 @@ class ANFIS(nn.Module):
         reglas = torch.matmul(x, self.pesos.T)  
         reglas_activadas = torch.softmax(reglas, dim=1)  
         membresia_activada = torch.matmul(reglas_activadas, self.membresia)  
-        return membresia_activada
+        salida = torch.sigmoid(membresia_activada)  # Forzar para render que el resultado esté entre 0 y 1
+        return salida
