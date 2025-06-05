@@ -1,3 +1,4 @@
+from anfis_model import ANFIS  # Asegúrate que el nombre del archivo y clase coincidan
 import json
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -19,7 +20,11 @@ def load_scaler(json_path):
 
 # Carga el scaler y modelo al iniciar la app
 scaler = load_scaler("scaler_params.json")
-model = torch.load("anfis_modelo_27.pth", map_location=torch.device('cpu'))
+# model = torch.load("anfis_modelo_27.pth", map_location=torch.device('cpu'))
+
+model = ANFIS(n_inputs=13, n_rules=300)  # Usa los valores reales que usaste al entrenar
+model.load_state_dict(torch.load("anfis_state_dict_27.pth", map_location=torch.device('cpu')))                
+
 model.eval()
 
 @app.route("/predict", methods=["POST"])
