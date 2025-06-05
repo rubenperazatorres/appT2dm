@@ -35,8 +35,8 @@ def index():
 
 
 # Ruta para predicción
-@app.route("/predict", methods=["POST"])
-def predict():
+@app.route("/predecir", methods=["POST"])
+def predecir():
     data = request.json
     if "features" not in data:
         return jsonify({"error": "No features provided"}), 400
