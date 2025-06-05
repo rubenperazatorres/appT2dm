@@ -2,7 +2,7 @@ from anfis_model import ANFIS
 import json
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template  
 import torch
 import os
 
