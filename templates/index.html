@@ -71,7 +71,7 @@
         Number(document.getElementById("monocitos").value)
       ];
 
-      fetch("/predecir", {
+      fetch(window.location.origin + "/predecir", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
