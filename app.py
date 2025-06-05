@@ -28,9 +28,16 @@ model.load_state_dict(torch.load("anfis_state_dict_27.pth", map_location=torch.d
 model.eval()
 
 # Ruta raíz para evitar error 404
-@app.route("/")
-def index():
-    return "✅ API de Predicción de Diabetes tipo 2 (ANFIS) en funcionamiento."
+#@app.route("/")
+#def index():
+#    return "✅ API de Predicción de Diabetes tipo 2 (ANFIS) en funcionamiento."
+
+# Ruta para servir la página index.html
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("index.html")
+
+
 
 # Ruta para predicción
 @app.route("/predict", methods=["POST"])
