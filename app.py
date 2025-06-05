@@ -2,7 +2,7 @@ from anfis_model import ANFIS
 import json
 import numpy as np
 from sklearn.preprocessing import StandardScaler
-from flask import Flask, request, jsonify, render_template  
+from flask import Flask, render_template, request, jsonify
 import torch
 import os
 
@@ -27,15 +27,10 @@ model = ANFIS(n_inputs=13, n_rules=300)
 model.load_state_dict(torch.load("anfis_state_dict_27.pth", map_location=torch.device('cpu')))
 model.eval()
 
-# Ruta raíz para evitar error 404
-#@app.route("/")
-#def index():
-#    return "✅ API de Predicción de Diabetes tipo 2 (ANFIS) en funcionamiento."
-
 # Ruta para servir la página index.html
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
 
 
