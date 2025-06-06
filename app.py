@@ -16,11 +16,14 @@ def load_scaler(json_path):
     with open(json_path, "r") as f:
         params = json.load(f)
     scaler = StandardScaler()
-    scaler.mean_ = np.array(params["mean_"])
-    scaler.scale_ = np.array(params["scale_"])
-    scaler.var_ = np.array(params["var_"])
+    scaler.mean_ = np.array(params["mean"])
+    scaler.scale_ = np.array(params["scale"])
+    scaler.var_ = np.array(params["var"])
     scaler.n_features_in_ = params["n_features_in_"]
+    scaler.feature_names_in_ = np.array(params["feature_names_in_"])
+
     return scaler
+
 
 # Carga el scaler y el modelo
 scaler = load_scaler("scaler_params.json")
