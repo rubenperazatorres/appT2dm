@@ -1,94 +1,254 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Predicción con ANFIS</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 0 20px;
+      background: #f9f9f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #34495e;
+    }
+    input[type=number] {
+      width: 100%;
+      padding: 8px 6px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      transition: border-color 0.3s;
+    }
+    input[type=number]:focus {
+      border-color: #2980b9;
+      outline: none;
+    }
+    button {
+      grid-column: span 2;
+      padding: 12px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 6px;
+      background-color: #2980b9;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #1c5980;
+    }
+    #generar-valores {
+      background-color: #27ae60;
+      margin-top: 10px;
+    }
+    #generar-valores:hover {
+      background-color: #1e8449;
+    }
+    #resultado {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+    #progress-container {
+      margin-top: 15px;
+      background: #ddd;
+      border-radius: 20px;
+      overflow: hidden;
+      height: 25px;
+      max-width: 100%;
+    }
+    #progress-bar {
+      height: 25px;
+      background-color: #2980b9;
+      width: 0%;
+      line-height: 25px;
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      transition: width 0.5s ease;
+      border-radius: 20px 0 0 20px;
+      white-space: nowrap;
+    }
+  </style>
 </head>
 <body>
   <h1>Predicción de Riesgo de Diabetes</h1>
-<form id="form-predict">
-  <label>Sexo (0=Hombre, 1=Mujer):</label>
-  <input type="number" id="sexo" min="0" max="1" step="1" required>
 
-  <label>Edad:</label>
-  <input type="number" id="edad" required>
+  <form id="form-predict">
+    <label for="sexo">Sexo (0=Hombre, 1=Mujer):</label>
+    <input type="number" id="sexo" min="0" max="1" step="1" required />
 
-  <label>IMC:</label>
-  <input type="number" id="imc" step="0.1" required>
+    <label for="edad">Edad:</label>
+    <input type="number" id="edad" required />
 
-  <label>Hemoglobina:</label>
-  <input type="number" id="hemoglobina" step="0.1" required>
+    <label for="imc">IMC:</label>
+    <input type="number" id="imc" step="0.1" required />
 
-  <label>Neutrófilos:</label>
-  <input type="number" id="neutrofilos" step="0.1" required>
+    <label for="hemoglobina">Hemoglobina:</label>
+    <input type="number" id="hemoglobina" step="0.1" required />
 
-  <label>Eritrocitos:</label>
-  <input type="number" id="eritrocitos" step="0.1" required>
+    <label for="neutrofilos">Neutrófilos:</label>
+    <input type="number" id="neutrofilos" step="0.1" required />
 
-  <label>Hematocrito:</label>
-  <input type="number" id="hematocrito" step="0.1" required>
+    <label for="eritrocitos">Eritrocitos:</label>
+    <input type="number" id="eritrocitos" step="0.1" required />
 
-  <label>MCH:</label>
-  <input type="number" id="mch" step="0.1" required>
+    <label for="hematocrito">Hematocrito:</label>
+    <input type="number" id="hematocrito" step="0.1" required />
 
-  <label>MCV:</label>
-  <input type="number" id="mcv" step="0.1" required>
+    <label for="mch">MCH:</label>
+    <input type="number" id="mch" step="0.1" required />
 
-  <label>Eosinófilos:</label>
-  <input type="number" id="eosinofilos" step="0.1" required>
+    <label for="mcv">MCV:</label>
+    <input type="number" id="mcv" step="0.1" required />
 
-  <label>RDW-CV:</label>
-  <input type="number" id="rdw" step="0.1" required>
+    <label for="eosinofilos">Eosinófilos:</label>
+    <input type="number" id="eosinofilos" step="0.1" required />
 
-  <label>Linfocitos:</label>
-  <input type="number" id="linfocitos" step="0.1" required>
+    <label for="rdw">RDW-CV:</label>
+    <input type="number" id="rdw" step="0.1" required />
 
-  <label>Monocitos:</label>
-  <input type="number" id="monocitos" step="0.1" required>
+    <label for="linfocitos">Linfocitos:</label>
+    <input type="number" id="linfocitos" step="0.1" required />
 
-  <button type="submit">Predecir</button>
-</form>
+    <label for="monocitos">Monocitos:</label>
+    <input type="number" id="monocitos" step="0.1" required />
 
+    <button type="submit">Predecir</button>
+    <button type="button" id="generar-valores">Generar aleatorios</button>
+  </form>
 
-  <h2 id="resultado"></h2>
+  <div id="resultado"></div>
 
-  <script>
- document.getElementById("form-predict").addEventListener("submit", async (e) => {
-  e.preventDefault();
+  <div id="progress-container" aria-label="Barra de progreso del riesgo">
+    <div id="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">0%</div>
+  </div>
 
-  const data = {
-    features: [
-      Number(document.getElementById("sexo").value),
-      Number(document.getElementById("edad").value),
-      Number(document.getElementById("imc").value),
-      Number(document.getElementById("hemoglobina").value),
-      Number(document.getElementById("neutrofilos").value),
-      Number(document.getElementById("eritrocitos").value),
-      Number(document.getElementById("hematocrito").value),
-      Number(document.getElementById("mch").value),
-      Number(document.getElementById("mcv").value),
-      Number(document.getElementById("eosinofilos").value),
-      Number(document.getElementById("rdw").value),
-      Number(document.getElementById("linfocitos").value),
-      Number(document.getElementById("monocitos").value),
-    ],
-  };
+<script>
+    const resultadoEl = document.getElementById("resultado");
+    const progressBar = document.getElementById("progress-bar");
 
-  try {
-    const response = await fetch("/predecir", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    const result = await response.json();
-
-    alert("Predicción: " + result.prediction);
-  } catch (error) {
-    alert("Error en la predicción");
-    console.error(error);
+  function validateRanges() {
+    const fields = [
+      { id: "sexo", min: 0, max: 1 },
+      { id: "edad", min: 18, max: 100 },
+      { id: "imc", min: 10, max: 50 },
+      { id: "hemoglobina", min: 8, max: 20 },
+      { id: "neutrofilos", min: 20, max: 90 },
+      { id: "eritrocitos", min: 3.0, max: 6.0 },
+      { id: "hematocrito", min: 30, max: 60 },
+      { id: "mch", min: 20, max: 35 },
+      { id: "mcv", min: 70, max: 110 },
+      { id: "eosinofilos", min: 0, max: 10 },
+      { id: "rdw", min: 10, max: 20 },
+      { id: "linfocitos", min: 10, max: 60 },
+      { id: "monocitos", min: 1, max: 10 },
+    ];
+    for (let field of fields) {
+      const val = parseFloat(document.getElementById(field.id).value);
+      if (isNaN(val) || val < field.min || val > field.max) {
+        alert(`El valor de '${field.id}' debe estar entre ${field.min} y ${field.max}.`);
+        return false;
+      }
+    }
+    return true;
   }
-});
-  </script>
+
+  document.getElementById("form-predict").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    if (!validateRanges()) return;
+
+    resultadoEl.textContent = "Procesando...";
+    progressBar.style.width = "0%";
+    progressBar.textContent = "0%";
+    progressBar.setAttribute("aria-valuenow", 0);
+
+    const data = {
+      features: [
+        Number(document.getElementById("sexo").value),
+        Number(document.getElementById("edad").value),
+        Number(document.getElementById("imc").value),
+        Number(document.getElementById("hemoglobina").value),
+        Number(document.getElementById("neutrofilos").value),
+        Number(document.getElementById("eritrocitos").value),
+        Number(document.getElementById("hematocrito").value),
+        Number(document.getElementById("mch").value),
+        Number(document.getElementById("mcv").value),
+        Number(document.getElementById("eosinofilos").value),
+        Number(document.getElementById("rdw").value),
+        Number(document.getElementById("linfocitos").value),
+        Number(document.getElementById("monocitos").value),
+      ],
+    };
+
+    try {
+      const response = await fetch("http://127.0.0.1:10000/predecir", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        resultadoEl.textContent = "Error: " + (result.error || "Respuesta inesperada");
+        progressBar.style.width = "0%";
+        progressBar.textContent = "0%";
+        progressBar.setAttribute("aria-valuenow", 0);
+      } else if ("prediction" in result) {
+        let porcentaje = Math.min(Math.max(result.prediction * 100, 0), 100);
+        resultadoEl.textContent = `Predicción: ${porcentaje.toFixed(1)}% de riesgo de diabetes`;
+        progressBar.style.width = porcentaje + "%";
+        progressBar.textContent = porcentaje.toFixed(1) + "%";
+        progressBar.setAttribute("aria-valuenow", porcentaje.toFixed(1));
+      } else {
+        resultadoEl.textContent = "Respuesta inesperada del servidor.";
+      }
+    } catch (error) {
+      resultadoEl.textContent = "Error en la predicción, revisa la consola.";
+      console.error(error);
+    }
+  });
+
+  document.getElementById("generar-valores").addEventListener("click", () => {
+    document.getElementById("sexo").value = Math.round(Math.random());
+    document.getElementById("edad").value = Math.floor(Math.random() * 83) + 18;
+    document.getElementById("imc").value = (10 + Math.random() * 40).toFixed(1);
+    document.getElementById("hemoglobina").value = (8 + Math.random() * 12).toFixed(1);
+    document.getElementById("neutrofilos").value = (20 + Math.random() * 70).toFixed(1);
+    document.getElementById("eritrocitos").value = (3.0 + Math.random() * 3).toFixed(2);
+    document.getElementById("hematocrito").value = (30 + Math.random() * 30).toFixed(1);
+    document.getElementById("mch").value = (20 + Math.random() * 15).toFixed(1);
+    document.getElementById("mcv").value = (70 + Math.random() * 40).toFixed(1);
+    document.getElementById("eosinofilos").value = (Math.random() * 10).toFixed(1);
+    document.getElementById("rdw").value = (10 + Math.random() * 10).toFixed(1);
+    document.getElementById("linfocitos").value = (10 + Math.random() * 50).toFixed(1);
+    document.getElementById("monocitos").value = (1 + Math.random() * 9).toFixed(1);
+  });
+</script>
 </body>
 </html>

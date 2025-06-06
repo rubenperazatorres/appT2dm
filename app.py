@@ -42,23 +42,35 @@ def index():
 # Ruta para predicción
 @app.route("/predecir", methods=["POST"])
 def predecir():
-    data = request.json
-    if "features" not in data:
-        return jsonify({"error": "No features provided"}), 400
-
-    features = np.array(data["features"]).reshape(1, -1)
     try:
+        data = request.json
+        if "features" not in data:
+            return jsonify({"error": "No features provided"}), 400
+
+        features = np.array(data["features"]).reshape(1, -1)
         features_scaled = scaler.transform(features)
+        input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
+
+        with torch.no_grad():
+            output = model(input_tensor)
+
+        prediction = output.numpy().tolist()
+        prediction_value = float(prediction[0][0])
+
+        if 0 <= prediction_value < 0.5:
+            resultado = "No diabético"
+        elif 0.5 <= prediction_value <= 1:
+            resultado = "Diabético"
+        else:
+            resultado = "❓ Resultado desconocido."
+
+        return jsonify({"prediction": prediction_value, "resultado": resultado})
+
     except Exception as e:
-        return jsonify({"error": f"Error in scaling features: {str(e)}"}), 400
+        # Esto devolverá un JSON con el error para evitar respuesta HTML
+        return jsonify({"error": str(e)}), 500
 
-    input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
 
-    with torch.no_grad():
-        output = model(input_tensor)
-
-    prediction = output.numpy().tolist()
-    return jsonify({"prediction": prediction})
 
 # Para ejecución en Render
 if __name__ == "__main__":

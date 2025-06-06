@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Predicción con ANFIS</title>
+</head>
+<body>
+  <h1>Predicción de Riesgo de Diabetes</h1>
+
+  <form id="form-predict">
+    <label>Sexo (0=Hombre, 1=Mujer):</label>
+    <input type="number" id="sexo" min="0" max="1" step="1" required>
+
+    <label>Edad:</label>
+    <input type="number" id="edad" required>
+
+    <label>IMC:</label>
+    <input type="number" id="imc" step="0.1" required>
+
+    <label>Hemoglobina:</label>
+    <input type="number" id="hemoglobina" step="0.1" required>
+
+    <label>Neutrófilos:</label>
+    <input type="number" id="neutrofilos" step="0.1" required>
+
+    <label>Eritrocitos:</label>
+    <input type="number" id="eritrocitos" step="0.1" required>
+
+    <label>Hematocrito:</label>
+    <input type="number" id="hematocrito" step="0.1" required>
+
+    <label>MCH:</label>
+    <input type="number" id="mch" step="0.1" required>
+
+    <label>MCV:</label>
+    <input type="number" id="mcv" step="0.1" required>
+
+    <label>Eosinófilos:</label>
+    <input type="number" id="eosinofilos" step="0.1" required>
+
+    <label>RDW-CV:</label>
+    <input type="number" id="rdw" step="0.1" required>
+
+    <label>Linfocitos:</label>
+    <input type="number" id="linfocitos" step="0.1" required>
+
+    <label>Monocitos:</label>
+    <input type="number" id="monocitos" step="0.1" required>
+
+    <br><br>
+    <button type="submit">Predecir</button>
+    <button type="button" id="generar-valores">Generar aleatorios</button>
+  </form>
+
+  <h2 id="resultado"></h2>
+
+  <script>
+    document.getElementById("form-predict").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        features: [
+          Number(document.getElementById("sexo").value),
+          Number(document.getElementById("edad").value),
+          Number(document.getElementById("imc").value),
+          Number(document.getElementById("hemoglobina").value),
+          Number(document.getElementById("neutrofilos").value),
+          Number(document.getElementById("eritrocitos").value),
+          Number(document.getElementById("hematocrito").value),
+          Number(document.getElementById("mch").value),
+          Number(document.getElementById("mcv").value),
+          Number(document.getElementById("eosinofilos").value),
+          Number(document.getElementById("rdw").value),
+          Number(document.getElementById("linfocitos").value),
+          Number(document.getElementById("monocitos").value),
+        ],
+      };
+
+      try {
+        const response = await fetch("/predecir", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        const result = await response.json();
+        alert("Predicción: " + result.prediction);
+      } catch (error) {
+        alert("Error en la predicción");
+        console.error(error);
+      }
+    });
+
+    // Lógica para generar valores aleatorios
+    document.getElementById("generar-valores").addEventListener("click", () => {
+      document.getElementById("sexo").value = Math.round(Math.random());
+      document.getElementById("edad").value = Math.floor(Math.random() * 80) + 18;
+      document.getElementById("imc").value = (18 + Math.random() * 12).toFixed(1);
+      document.getElementById("hemoglobina").value = (10 + Math.random() * 8).toFixed(1);
+      document.getElementById("neutrofilos").value = (30 + Math.random() * 30).toFixed(1);
+      document.getElementById("eritrocitos").value = (3.5 + Math.random() * 2).toFixed(1);
+      document.getElementById("hematocrito").value = (35 + Math.random() * 15).toFixed(1);
+      document.getElementById("mch").value = (25 + Math.random() * 5).toFixed(1);
+      document.getElementById("mcv").value = (70 + Math.random() * 20).toFixed(1);
+      document.getElementById("eosinofilos").value = (1 + Math.random() * 4).toFixed(1);
+      document.getElementById("rdw").value = (11 + Math.random() * 3).toFixed(1);
+      document.getElementById("linfocitos").value = (20 + Math.random() * 20).toFixed(1);
+      document.getElementById("monocitos").value = (2 + Math.random() * 5).toFixed(1);
+    });
+  </script>
+</body>
+</html>
