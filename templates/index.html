@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Predicción con ANFIS</title>
+  <title>Prediction with ANFIS</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -95,50 +95,50 @@
   </style>
 </head>
 <body>
-  <h1>Predicción de Riesgo de Diabetes</h1>
+  <h1>Diabetes Risk Prediction <br>Adaptive Neuro-Fuzzy Inference System)</h1>
 
   <form id="form-predict">
-    <label for="sexo">Sexo (0=Hombre, 1=Mujer):</label>
+    <label for="sexo">Sex (0=Male, 1=Female):</label>
     <input type="number" id="sexo" min="0" max="1" step="1" required />
 
-    <label for="edad">Edad:</label>
+    <label for="edad">Age:</label>
     <input type="number" id="edad" required />
 
-    <label for="imc">IMC:</label>
-    <input type="number" id="imc" step="0.1" required />
+    <label for="imc">BMI:</label>
+    <input type="number" id="imc" step="0.01" required />
 
-    <label for="hemoglobina">Hemoglobina:</label>
-    <input type="number" id="hemoglobina" step="0.1" required />
+    <label for="hemoglobina">Hemoglobin:</label>
+    <input type="number" id="hemoglobina" step="0.01" required />
 
-    <label for="neutrofilos">Neutrófilos:</label>
-    <input type="number" id="neutrofilos" step="0.1" required />
+    <label for="neutrofilos">Neutrophils:</label>
+    <input type="number" id="neutrofilos" step="0.01" required />
 
-    <label for="eritrocitos">Eritrocitos:</label>
-    <input type="number" id="eritrocitos" step="0.1" required />
+    <label for="eritrocitos">Erythrocytes:</label>
+    <input type="number" id="eritrocitos" step="0.01" required />
 
-    <label for="hematocrito">Hematocrito:</label>
-    <input type="number" id="hematocrito" step="0.1" required />
+    <label for="hematocrito">Hematocrit:</label>
+    <input type="number" id="hematocrito" step="0.01" required />
 
     <label for="mch">MCH:</label>
-    <input type="number" id="mch" step="0.1" required />
+    <input type="number" id="mch" step="0.01" required />
 
     <label for="mcv">MCV:</label>
-    <input type="number" id="mcv" step="0.1" required />
+    <input type="number" id="mcv" step="0.01" required />
 
-    <label for="eosinofilos">Eosinófilos:</label>
-    <input type="number" id="eosinofilos" step="0.1" required />
+    <label for="eosinofilos">Eosinophils:</label>
+    <input type="number" id="eosinofilos" step="0.01" required />
 
     <label for="rdw">RDW-CV:</label>
-    <input type="number" id="rdw" step="0.1" required />
+    <input type="number" id="rdw" step="0.01" required />
 
-    <label for="linfocitos">Linfocitos:</label>
-    <input type="number" id="linfocitos" step="0.1" required />
+    <label for="linfocitos">Lymphocytes:</label>
+    <input type="number" id="linfocitos" step="0.01" required />
 
-    <label for="monocitos">Monocitos:</label>
-    <input type="number" id="monocitos" step="0.1" required />
+    <label for="monocitos">Monocytes:</label>
+    <input type="number" id="monocitos" step="0.01" required />
 
-    <button type="submit">Predecir</button>
-    <button type="button" id="generar-valores">Generar aleatorios</button>
+    <button type="submit">Predict</button>
+    <button type="button" id="generar-valores">Generate Random Values</button>
   </form>
 
   <div id="resultado"></div>
@@ -170,19 +170,18 @@
     for (let field of fields) {
       const val = parseFloat(document.getElementById(field.id).value);
       if (isNaN(val) || val < field.min || val > field.max) {
-        alert(`El valor de '${field.id}' debe estar entre ${field.min} y ${field.max}.`);
-        return false;
-      }
+      alert(`The value of '${field.id}' must be between ${field.min} and ${field.max}.`);
+      return false; }
     }
     return true;
   }
-
+ 
   document.getElementById("form-predict").addEventListener("submit", async function(event) {
     event.preventDefault();
 
     if (!validateRanges()) return;
 
-    resultadoEl.textContent = "Procesando...";
+    resultadoEl.textContent = "Processing...";
     progressBar.style.width = "0%";
     progressBar.textContent = "0%";
     progressBar.setAttribute("aria-valuenow", 0);
@@ -215,13 +214,13 @@
       const result = await response.json();
 
       if (!response.ok || result.error) {
-        resultadoEl.textContent = "Error: " + (result.error || "Respuesta inesperada");
+        resultadoEl.textContent = "Error: " + (result.error || "Unexpected response");
         progressBar.style.width = "0%";
         progressBar.textContent = "0%";
         progressBar.setAttribute("aria-valuenow", 0);
       } else if ("prediction" in result) {
         let porcentaje = Math.min(Math.max(result.prediction * 100, 0), 100);
-        resultadoEl.textContent = `Predicción: ${porcentaje.toFixed(1)}% de riesgo de diabetes`;
+        resultadoEl.textContent = `Prediction: ${porcentaje.toFixed(1)}% diabetes risk`;
         progressBar.style.width = porcentaje + "%";
         progressBar.textContent = porcentaje.toFixed(1) + "%";
         progressBar.setAttribute("aria-valuenow", porcentaje.toFixed(1));
@@ -229,7 +228,7 @@
         resultadoEl.textContent = "Respuesta inesperada del servidor.";
       }
     } catch (error) {
-      resultadoEl.textContent = "Error en la predicción, revisa la consola.";
+      resultadoEl.textContent = "Unexpected server response.";
       console.error(error);
     }
   });
