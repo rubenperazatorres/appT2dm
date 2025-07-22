@@ -49,10 +49,20 @@ def predecir():
         data = request.json
         if "features" not in data:
             return jsonify({"error": "No features provided"}), 400
+        # Original
+        # features = np.array(data["features"]).reshape(1, -1)
+        # features_scaled = scaler.transform(features)
+        # input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
 
+        # Para probar salida
         features = np.array(data["features"]).reshape(1, -1)
+        print("Input features:", features)
         features_scaled = scaler.transform(features)
+        print("Scaled features:", features_scaled)
         input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
+        print("Input tensor:", input_tensor)        
+
+        
 
         with torch.no_grad():
             output = model(input_tensor)
@@ -65,7 +75,7 @@ def predecir():
         elif 0.5 <= prediction_value <= 1:
             resultado = "Diabético"
         else:
-            resultado = "❓ Resultado desconocido."
+            resultado = "Resultado desconocido."
 
         return jsonify({"prediction": prediction_value, "resultado": resultado})
 
