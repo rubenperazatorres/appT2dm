@@ -47,37 +47,51 @@ def index():
 def predecir():
     try:
         data = request.json
-        if "features" not in data:
-            return jsonify({"error": "No features provided"}), 400
+        # if "features" not in data:
+        #    return jsonify({"error": "No features provided"}), 400
         # Original
         # features = np.array(data["features"]).reshape(1, -1)
         # features_scaled = scaler.transform(features)
         # input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
 
-        # Para probar salida
-        features = np.array(data["features"]).reshape(1, -1)
-        print("Input features:", features)
-        features_scaled = scaler.transform(features)
-        print("Scaled features:", features_scaled)
-        input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
-        print("Input tensor:", input_tensor)        
+        # with torch.no_grad():
+        #    output = model(input_tensor)
 
-        
+        # prediction = output.numpy().tolist()
+        # prediction_value = float(prediction[0][0])
 
-        with torch.no_grad():
-            output = model(input_tensor)
+        # if 0 <= prediction_value < 0.5:
+        #    resultado = "No diabético"
+        # elif 0.5 <= prediction_value <= 1:
+        #    resultado = "Diabético"
+        # else:
+        #    resultado = "Resultado desconocido."
 
-        prediction = output.numpy().tolist()
-        prediction_value = float(prediction[0][0])
+        # return jsonify({"prediction": prediction_value, "resultado": resultado})
 
-        if 0 <= prediction_value < 0.5:
-            resultado = "No diabético"
-        elif 0.5 <= prediction_value <= 1:
-            resultado = "Diabético"
-        else:
-            resultado = "Resultado desconocido."
 
-        return jsonify({"prediction": prediction_value, "resultado": resultado})
+     if not data or "features" not in data:
+        return jsonify({"error": "No features provided"})
+
+    input_data = data["features"]
+
+    print("🔹 Datos recibidos:", input_data)  # Depuración
+
+    input_df = pd.DataFrame([input_data], columns=expected_columns)
+    input_scaled = scaler.transform(input_df)
+
+    print("📊 Datos escalados:", input_scaled.tolist())  # Depuración
+
+    input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
+
+    with torch.no_grad():
+        output = model(input_tensor)
+        print("🧠 Salida cruda del modelo:", output.item())  # Ver si siempre es 0.5
+
+        prediction = float(output.item())
+        resultado = "Diabético" if prediction >= 0.5 else "No diabético"
+
+    return jsonify({"prediction": prediction, "resultado": resultado})    
 
     except Exception as e:
         # Esto devolverá un JSON con el error para evitar respuesta HTML
