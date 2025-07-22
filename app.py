@@ -75,18 +75,18 @@ def predecir():
 
     input_data = data["features"]
 
-    print("🔹 Datos recibidos:", input_data)  # Depuración
+    print("Datos recibidos:", input_data)  # Depuración
 
     input_df = pd.DataFrame([input_data], columns=expected_columns)
     input_scaled = scaler.transform(input_df)
 
-    print("📊 Datos escalados:", input_scaled.tolist())  # Depuración
+    print("Datos escalados:", input_scaled.tolist())  # Depuración
 
     input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
 
     with torch.no_grad():
         output = model(input_tensor)
-        print("🧠 Salida cruda del modelo:", output.item())  # Ver si siempre es 0.5
+        print("Salida cruda del modelo:", output.item())  # Ver si siempre es 0.5
 
         prediction = float(output.item())
         resultado = "Diabético" if prediction >= 0.5 else "No diabético"
