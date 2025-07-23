@@ -31,7 +31,7 @@ scaler = load_scaler("scaler_params.json")
 # Inicializa el modelo con los mismos parámetros usados durante el entrenamiento
 model = ANFIS(n_inputs=no_entradas, n_rules=no_reglas)
 #model.load_state_dict(torch.load("anfis_state_dict_27.pth", map_location=torch.device('cpu')))
-model.load_state_dict(torch.load("anfis_state_dict_300.pth", map_location=torch.device('cpu')))
+model.load_state_dict(torch.load("entrenamiento/anfis_state_dict_300.pth", map_location=torch.device('cpu')))
 
 model.eval()
 
