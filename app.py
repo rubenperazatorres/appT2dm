@@ -40,20 +40,16 @@ model.eval()
 def index():
     return render_template('index.html')
 
-
-
 # Ruta para predicción
 @app.route("/predecir", methods=["POST"])
 def predecir():
     try:
         data = request.json
-
         if not data or "features" not in data:
             return jsonify({"error": "No features provided"})
-
         input_data = data["features"]
 
-        # Depuración: enviar tipo y contenido de input_data en la respuesta JSON
+        # Devuelve tipo y contenido de input_data para debug
         debug_info = {
             "input_type": str(type(input_data)),
             "input_content": input_data
@@ -68,11 +64,9 @@ def predecir():
 
         with torch.no_grad():
             output = model(input_tensor)
-
             prediction = float(output.item())
             resultado = "Diabético" if prediction >= 0.5 else "No diabético"
 
-        # Incluir debug_info en la respuesta para verlo desde curl
         return jsonify({
             "prediction": prediction,
             "resultado": resultado,
@@ -81,8 +75,6 @@ def predecir():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
-
 
 # Para ejecución en Render
 if __name__ == "__main__":
