@@ -43,6 +43,7 @@ def index():
 # Ruta para predicción
 @app.route("/predecir", methods=["POST"])
 def predecir():
+    print("=== PETICIÓN A /predecir RECIBIDA ===")
     try:
         data = request.json
         if not data or "features" not in data:
