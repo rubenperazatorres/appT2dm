@@ -75,16 +75,23 @@ def predecir():
 
     input_data = data["features"]
 
-    print("Datos recibidos:", input_data)  # Depuración
-
-    input_df = pd.DataFrame([input_data], columns=expected_columns)
+    print("Datos recibidos:", input_data)
+    input_df = pd.DataFrame([input_data])
+    print("DataFrame original:\n", input_df)
+    
+    input_df = input_df[expected_columns]
+    print("DataFrame reordenado:\n", input_df)
+    
     input_scaled = scaler.transform(input_df)
-
-    print("Datos escalados:", input_scaled.tolist())  # Depuración
-
+    print("Datos escalados:", input_scaled.tolist())
+    
     input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
+    print("Tensor para modelo:", input_tensor)
 
-    print("Salida sigmoide:", torch.sigmoid(output).item())
+with torch.no_grad():
+    output = model(input_tensor)
+    print("Salida cruda del modelo:", output.item())
+    print("Salida sigmoide:", torch.sigmoid(output).item())  # Si no tienes sigmoid en la última capa
 
     with torch.no_grad():
         output = model(input_tensor)
