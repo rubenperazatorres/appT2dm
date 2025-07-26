@@ -54,16 +54,19 @@ def predecir():
         input_data = data["features"]
         print("Datos recibidos:", input_data)  # Depuración
 
-        # 👇 AQUÍ HACES EL CAMBIO
+        # Test para detectar error
         input_df = pd.DataFrame([input_data])
         input_df = input_df[expected_columns]
         print("DataFrame reordenado:\n", input_df)
+        print("Tipo de input_data:", type(input_data))
+        print("Contenido de input_data:", input_data)
 
         input_scaled = scaler.transform(input_df)
         print("Datos escalados:", input_scaled.tolist())  # Depuración
 
         input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
         print("Tensor para modelo:", input_tensor)
+        print("Input escalado antes de tensor:", input_scaled)
 
         with torch.no_grad():
             output = model(input_tensor)
