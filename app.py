@@ -52,30 +52,32 @@ def predecir():
             return jsonify({"error": "No features provided"})
 
         input_data = data["features"]
-        print("Datos recibidos:", input_data)  # Depuración
 
-        # Test para detectar error
+        # Depuración: enviar tipo y contenido de input_data en la respuesta JSON
+        debug_info = {
+            "input_type": str(type(input_data)),
+            "input_content": input_data
+        }
+
         input_df = pd.DataFrame([input_data])
         input_df = input_df[expected_columns]
-        print("DataFrame reordenado:\n", input_df)
-        print("Tipo de input_data:", type(input_data))
-        print("Contenido de input_data:", input_data)
 
         input_scaled = scaler.transform(input_df)
-        print("Datos escalados:", input_scaled.tolist())  # Depuración
 
         input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
-        print("Tensor para modelo:", input_tensor)
-        print("Input escalado antes de tensor:", input_scaled)
 
         with torch.no_grad():
             output = model(input_tensor)
-            print("Salida cruda del modelo:", output.item())
 
             prediction = float(output.item())
             resultado = "Diabético" if prediction >= 0.5 else "No diabético"
 
-        return jsonify({"prediction": prediction, "resultado": resultado})
+        # Incluir debug_info en la respuesta para verlo desde curl
+        return jsonify({
+            "prediction": prediction,
+            "resultado": resultado,
+            "debug_info": debug_info
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
