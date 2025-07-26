@@ -84,6 +84,8 @@ def predecir():
 
     input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
 
+    print("Salida sigmoide:", torch.sigmoid(output).item())
+
     with torch.no_grad():
         output = model(input_tensor)
         print("Salida cruda del modelo:", output.item())  # Ver si siempre es 0.5
