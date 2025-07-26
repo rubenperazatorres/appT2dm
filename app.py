@@ -47,63 +47,34 @@ def index():
 def predecir():
     try:
         data = request.json
-        # if "features" not in data:
-        #    return jsonify({"error": "No features provided"}), 400
-        # Original
-        # features = np.array(data["features"]).reshape(1, -1)
-        # features_scaled = scaler.transform(features)
-        # input_tensor = torch.tensor(features_scaled, dtype=torch.float32)
 
-        # with torch.no_grad():
-        #    output = model(input_tensor)
+        if not data or "features" not in data:
+            return jsonify({"error": "No features provided"})
 
-        # prediction = output.numpy().tolist()
-        # prediction_value = float(prediction[0][0])
+        input_data = data["features"]
+        print("Datos recibidos:", input_data)  # Depuración
 
-        # if 0 <= prediction_value < 0.5:
-        #    resultado = "No diabético"
-        # elif 0.5 <= prediction_value <= 1:
-        #    resultado = "Diabético"
-        # else:
-        #    resultado = "Resultado desconocido."
+        # 👇 AQUÍ HACES EL CAMBIO
+        input_df = pd.DataFrame([input_data])
+        input_df = input_df[expected_columns]
+        print("DataFrame reordenado:\n", input_df)
 
-        # return jsonify({"prediction": prediction_value, "resultado": resultado})
+        input_scaled = scaler.transform(input_df)
+        print("Datos escalados:", input_scaled.tolist())  # Depuración
 
+        input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
+        print("Tensor para modelo:", input_tensor)
 
-     if not data or "features" not in data:
-        return jsonify({"error": "No features provided"})
+        with torch.no_grad():
+            output = model(input_tensor)
+            print("Salida cruda del modelo:", output.item())
 
-    input_data = data["features"]
+            prediction = float(output.item())
+            resultado = "Diabético" if prediction >= 0.5 else "No diabético"
 
-    print("Datos recibidos:", input_data)
-    input_df = pd.DataFrame([input_data])
-    print("DataFrame original:\n", input_df)
-    
-    input_df = input_df[expected_columns]
-    print("DataFrame reordenado:\n", input_df)
-    
-    input_scaled = scaler.transform(input_df)
-    print("Datos escalados:", input_scaled.tolist())
-    
-    input_tensor = torch.tensor(input_scaled, dtype=torch.float32)
-    print("Tensor para modelo:", input_tensor)
-
-with torch.no_grad():
-    output = model(input_tensor)
-    print("Salida cruda del modelo:", output.item())
-    print("Salida sigmoide:", torch.sigmoid(output).item())  # Si no tienes sigmoid en la última capa
-
-    with torch.no_grad():
-        output = model(input_tensor)
-        print("Salida cruda del modelo:", output.item())  # Ver si siempre es 0.5
-
-        prediction = float(output.item())
-        resultado = "Diabético" if prediction >= 0.5 else "No diabético"
-
-    return jsonify({"prediction": prediction, "resultado": resultado})    
+        return jsonify({"prediction": prediction, "resultado": resultado})
 
     except Exception as e:
-        # Esto devolverá un JSON con el error para evitar respuesta HTML
         return jsonify({"error": str(e)}), 500
 
 
